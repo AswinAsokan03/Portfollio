@@ -77,20 +77,70 @@ const navLinks = document.querySelector('.nav-links');
 
 if (hamburger) {
   hamburger.addEventListener('click', () => {
-    // In a real app, you'd toggle a class to show/hide with transition.
-    // For now, simple toggle
-    if (navLinks.style.display === 'flex') {
-      navLinks.style.display = 'none';
+    navLinks.classList.toggle('active');
+  });
+
+  // Close menu when a link is clicked
+  const links = navLinks.querySelectorAll('a');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+    });
+  });
+}
+
+// Dark Mode Toggle
+const themeToggle = document.getElementById('theme-toggle');
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    
+    const icon = themeToggle.querySelector('i');
+    if (isDark) {
+      icon.classList.remove('fa-sun');
+      icon.classList.add('fa-moon');
     } else {
-      navLinks.style.display = 'flex';
-      navLinks.style.flexDirection = 'column';
-      navLinks.style.position = 'absolute';
-      navLinks.style.top = '100%';
-      navLinks.style.left = '0';
-      navLinks.style.width = '100%';
-      navLinks.style.background = '#fdf1cd'; // Match neobrutalism bg
-      navLinks.style.borderBottom = '4px solid #000';
-      navLinks.style.padding = '2rem 0';
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
     }
+  });
+}
+
+// Handle Contact Form Submission
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = contactForm.querySelector('button');
+    const originalText = btn.textContent;
+    btn.textContent = 'Sending...';
+    btn.style.opacity = '0.7';
+    
+    try {
+      const response = await fetch(contactForm.action, {
+        method: contactForm.method,
+        body: new FormData(contactForm),
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        btn.textContent = 'Message Sent!';
+        contactForm.reset();
+      } else {
+        btn.textContent = 'Error! Try Again.';
+      }
+    } catch (error) {
+      btn.textContent = 'Error! Try Again.';
+    }
+    
+    btn.style.opacity = '1';
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+    }, 3000);
   });
 }
