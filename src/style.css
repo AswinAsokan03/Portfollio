@@ -731,10 +731,10 @@ ul {
     display: block;
   }
   
-  .hero {
+  .hero.section {
     flex-direction: column;
     text-align: center;
-    padding-top: 160px;
+    padding-top: 180px;
   }
   
   .hero-actions {
